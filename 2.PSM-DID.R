@@ -70,6 +70,10 @@ Adjmat <- fread("../Data_clean/Adjacency_matrix_long.csv")
 Adjmat <- Adjmat %>% subset(row %in% df_County$PAC)
 
 
+### ..climate zone
+zone <- openxlsx::read.xlsx("../../../Dataset/zone/county/county.xlsx")
+zone <- zone %>% subset(County %in% hosdata$id_hosp)
+
 
 #### 2.PSM DID ####
 ### .. 
@@ -113,10 +117,9 @@ myfun = function(i){
     
     ## ..
     AdjmatCounty = Adjmat$col[which(Adjmat$adj==1 & Adjmat$row == CaseCounty)]
-    
-  
+    cz = zone$zone[which(zone$County == CaseCounty)]
+    thezone = zone$County[which(zone$zone == cz)]
     MICounty = MI0.5[which(MI0.5 != CaseCounty)]
-    
     
     
     ### ..psm 1:4
@@ -125,6 +128,9 @@ myfun = function(i){
     PSMdata$Tag = ifelse(PSMdata$HW925.3==1,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% noControl,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% AdjmatCounty,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% thezone,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% MICounty,1,PSMdata$Tag)
+    
     PSMdata = PSMdata[,c(1,4)]  #############
     names(PSMdata)[1] = "County"
     PSMdata = left_join(PSMdata,covs.time.day %>% subset(date==EventSatrt),by = "County")
@@ -208,11 +214,11 @@ myfun = function(i){
     noControl = noControl[once == T, PAC]
     noControl = noControl[which(noControl != CaseCounty)]
  
+    ## ..
     AdjmatCounty = Adjmat$col[which(Adjmat$adj==1 & Adjmat$row == CaseCounty)]
-    
-  
+    cz = zone$zone[which(zone$County == CaseCounty)]
+    thezone = zone$County[which(zone$zone == cz)]
     MICounty = MI0.5[which(MI0.5 != CaseCounty)]
-    
     
     
     ### ..psm 1:4
@@ -221,6 +227,8 @@ myfun = function(i){
     PSMdata$Tag = ifelse(PSMdata$HW925.3==1,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% noControl,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% AdjmatCounty,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% thezone,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% MICounty,1,PSMdata$Tag)
     PSMdata = PSMdata[,c(1,4)] 
     names(PSMdata)[1] = "County"
     PSMdata = left_join(PSMdata,covs.time.day %>% subset(date==EventSatrt),by = "County")
@@ -302,9 +310,12 @@ myfun = function(i){
     noControl = noControl[once == T, PAC]
     noControl = noControl[which(noControl != CaseCounty)]
  
+    ## ..
     AdjmatCounty = Adjmat$col[which(Adjmat$adj==1 & Adjmat$row == CaseCounty)]
+    cz = zone$zone[which(zone$County == CaseCounty)]
+    thezone = zone$County[which(zone$zone == cz)]
+    MICounty = MI0.5[which(MI0.5 != CaseCounty)]
     
-
     
     ### ..psm 1:4
     PSMdata = df_County_time.all[date == EventSatrt]
@@ -312,6 +323,8 @@ myfun = function(i){
     PSMdata$Tag = ifelse(PSMdata$HW925.3==1,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% noControl,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% AdjmatCounty,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% thezone,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% MICounty,1,PSMdata$Tag)
     PSMdata = PSMdata[,c(1,4)] 
     names(PSMdata)[1] = "County"
     PSMdata = left_join(PSMdata,covs.time.day %>% subset(date==EventSatrt),by = "County")
@@ -393,9 +406,12 @@ myfun = function(i){
     noControl = noControl[which(noControl != CaseCounty)]
     
 
+    ## ..
     AdjmatCounty = Adjmat$col[which(Adjmat$adj==1 & Adjmat$row == CaseCounty)]
+    cz = zone$zone[which(zone$County == CaseCounty)]
+    thezone = zone$County[which(zone$zone == cz)]
+    MICounty = MI0.5[which(MI0.5 != CaseCounty)]
     
-   
     
     ### ..psm 1:4
     PSMdata = df_County_time.all[date == EventSatrt]
@@ -403,6 +419,8 @@ myfun = function(i){
     PSMdata$Tag = ifelse(PSMdata$HW925.3==1,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% noControl,1,PSMdata$Tag)
     PSMdata$Tag = ifelse(PSMdata$PAC %in% AdjmatCounty,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% thezone,1,PSMdata$Tag)
+    PSMdata$Tag = ifelse(PSMdata$PAC %in% MICounty,1,PSMdata$Tag)
     PSMdata = PSMdata[,c(1,4)] 
     names(PSMdata)[1] = "County"
     PSMdata = left_join(PSMdata,covs.time.day %>% subset(date==EventSatrt),by = "County")
